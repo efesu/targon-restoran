@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Targon Admin - Menü Yönetimi</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/admin.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3 class="text-primary"><i class="fa fa-utensils me-2"></i>Targon</h3>
+            <small class="text-white-50">Admin Paneli</small>
+        </div>
+        <div class="sidebar-menu">
+            <a href="index.html"><i class="fa fa-home"></i>Dashboard</a>
+            <a href="announcements.html"><i class="fa fa-bullhorn"></i>Duyurular</a>
+            <a href="menu.html" class="active"><i class="fa fa-book-open"></i>Menü Yönetimi</a>
+            <a href="../index.html" target="_blank"><i class="fa fa-globe"></i>Siteyi Görüntüle</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-white rounded shadow-sm mb-4 p-3">
+            <div class="container-fluid">
+                <button class="btn btn-primary d-block d-md-none" id="sidebarToggle"><i class="fa fa-bars"></i></button>
+                <h4 class="mb-0 text-dark ms-3">Menü Yönetimi</h4>
+                
+                <div class="ms-auto d-flex align-items-center">
+                    <div class="dropdown">
+                        <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="../img/ferhat-sef.jpeg" alt="" width="32" height="32" class="rounded-circle me-2">
+                            <strong>Admin</strong>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end text-small shadow" aria-labelledby="dropdownUser1">
+                            <li><a class="dropdown-item" href="#">Çıkış Yap</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Content -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <h5 class="mb-0 text-dark me-3">Yemek Listesi</h5>
+                    <select class="form-select form-select-sm" id="categoryFilter" style="width: 150px;">
+                        <option value="all" selected>Tüm Kategoriler</option>
+                        <option value="Kahvaltı">Kahvaltılıklar</option>
+                        <option value="Atıştırmalıklar">Atıştırmalıklar</option>
+                        <option value="Ana Yemekler">Ana Yemekler</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addMenuModal">
+                    <i class="fa fa-plus me-2"></i>Yeni Yemek Ekle
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Görsel</th>
+                                <th>Yemek Adı</th>
+                                <th>Kategori</th>
+                                <th>Fiyat</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="menuTableBody">
+                            <!-- Items will be loaded here via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal (Add/Edit Menu) -->
+    <div class="modal fade" id="addMenuModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Yemek Ekle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addMenuForm">
+                        <div class="mb-3">
+                            <label class="form-label">Yemek Adı</label>
+                            <input type="text" class="form-control" id="menuName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Açıklama (Alt Yazı)</label>
+                            <textarea class="form-control" id="menuDesc" rows="2" placeholder="Örn: Zengin baharatlarla hazırlanmış..." required></textarea>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Kategori</label>
+                                <select class="form-select" id="menuCategory">
+                                    <option value="Kahvaltı">Kahvaltılıklar</option>
+                                    <option value="Atıştırmalıklar">Atıştırmalıklar</option>
+                                    <option value="Ana Yemekler">Ana Yemekler</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Fiyat (TL)</label>
+                                <input type="number" class="form-control" id="menuPrice" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <!-- Dosya işlemleri mantıksal olarak ele alınır -->
+                            <label class="form-label">Görsel</label>
+                            <input type="file" class="form-control" id="menuImage">
+                            <small class="text-muted">Demo modunda varsayılan görsel kullanılacaktır.</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" class="btn btn-primary" onclick="addMenuItem()">Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/menu-data.js"></script>
+    <script>
+        // Sidebar Toggle
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('active');
+            document.querySelector('.main-content').classList.toggle('active');
+        });
+
+        // Use Shared MenuManager
+        let menuItems = MenuManager.getAll();
+
+        function renderMethods(filter = 'all') {
+            const tbody = document.getElementById('menuTableBody');
+            tbody.innerHTML = '';
+            
+            // Re-fetch in case changed
+            menuItems = MenuManager.getAll();
+
+            menuItems.forEach(item => {
+                if (filter === 'all' || item.category === filter) {
+                    const tr = document.createElement('tr');
+                    // Handle image path for admin view
+                    const displayImg = "../" + item.img.replace(/^\.\.\//, ''); 
+
+                    tr.innerHTML = `
+                        <td><img src="${displayImg}" alt="" class="rounded" width="50" height="50" style="object-fit:cover;"></td>
+                        <td>
+                            <div class="fw-bold">${item.name}</div>
+                            <small class="text-muted">${item.description || ''}</small>
+                        </td>
+                        <td><span class="badge bg-secondary">${item.category === 'Kahvaltı' ? 'Kahvaltılıklar' : item.category}</span></td>
+                        <td>₺${item.price}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteItem(${item.id})"><i class="fa fa-trash"></i></button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+            });
+        }
+
+        function addMenuItem() {
+            const name = document.getElementById('menuName').value;
+            const desc = document.getElementById('menuDesc').value;
+            const category = document.getElementById('menuCategory').value;
+            const price = document.getElementById('menuPrice').value;
+            
+            if(name && price) {
+                // Determine a valid image for new items
+                let imgPath = "img/menu-1.jpg"; // fallback default
+                // Simple logic to pick a random existing image so it looks nice
+                // We'll just stick to a safe default that definitely exists to verify defaults.
+                // Assuming img/service-1.jpg exists or similar if menu-1 doesn't. 
+                // Let's use 'img/serpme-kahvalti.jpg' type placeholders randomly? 
+                // No, better to be safe. I know 'img/hero.png' exists, 'img/about-1.jpg' exists.
+                // Let's use 'img/service-1.jpg' if available, or just one of the menu items.
+                // Actually, let's use a generic one if possible. Or just re-use 'img/serpme-kahvalti.jpg' as placeholder.
+                // Better yet:
+                imgPath = "img/about-1.jpg"; // Fairly generic food/restaurant image usually
+
+                const newItem = {
+                    id: Date.now(),
+                    name: name,
+                    description: desc,
+                    category: category,
+                    price: price,
+                    img: imgPath 
+                };
+                
+                MenuManager.addItem(newItem);
+                renderMethods(document.getElementById('categoryFilter').value);
+                
+                // Close Modal manually
+                var myModalEl = document.getElementById('addMenuModal');
+                var modal = bootstrap.Modal.getInstance(myModalEl);
+                modal.hide();
+                
+                // Reset form
+                document.getElementById('addMenuForm').reset();
+            } else {
+                alert("Lütfen isim ve fiyat giriniz.");
+            }
+        }
+
+        function deleteItem(id) {
+            if(confirm("Bu yemeği silmek istediğinize emin misiniz?")) {
+                MenuManager.deleteItem(id);
+                renderMethods(document.getElementById('categoryFilter').value);
+            }
+        }
+
+        // Filter Listener
+        document.getElementById('categoryFilter').addEventListener('change', function(e) {
+            renderMethods(e.target.value);
+        });
+
+        // Initial Render
+        renderMethods();
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Targon Admin - Kontrol Paneli</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Stylesheet -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <link href="css/admin.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3 class="text-primary"><i class="fa fa-utensils me-2"></i>Targon</h3>
+            <small class="text-white-50">Admin Paneli</small>
+        </div>
+        <div class="sidebar-menu">
+            <a href="index.html" class="active"><i class="fa fa-home"></i>Dashboard</a>
+            <a href="announcements.html"><i class="fa fa-bullhorn"></i>Duyurular</a>
+            <a href="menu.html"><i class="fa fa-book-open"></i>Menü Yönetimi</a>
+            <a href="../index.html" target="_blank"><i class="fa fa-globe"></i>Siteyi Görüntüle</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-white rounded shadow-sm mb-4 p-3">
+            <div class="container-fluid">
+                <button class="btn btn-primary d-block d-md-none" id="sidebarToggle"><i class="fa fa-bars"></i></button>
+                <h4 class="mb-0 text-dark ms-3">Genel Bakış</h4>
+                
+                <div class="ms-auto d-flex align-items-center">
+                    <div class="dropdown">
+                        <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="../img/ferhat-sef.jpeg" alt="" width="32" height="32" class="rounded-circle me-2">
+                            <strong>Admin</strong>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end text-small shadow" aria-labelledby="dropdownUser1">
+                            <li><a class="dropdown-item" href="#">Ayarlar</a></li>
+                            <li><a class="dropdown-item" href="#">Profil</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Çıkış Yap</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Stats Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-xl-3 col-sm-6">
+                <div class="card stats-card h-100 p-3 bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Günlük Rezervasyon</p>
+                            <h2 class="mb-0 text-dark">15</h2>
+                        </div>
+                        <i class="fa fa-calendar-check stats-icon"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6">
+                <div class="card stats-card h-100 p-3 bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Bekleyen Mesajlar</p>
+                            <h2 class="mb-0 text-dark">4</h2>
+                        </div>
+                        <i class="fa fa-envelope stats-icon"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6">
+                <div class="card stats-card h-100 p-3 bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Online Sipariş</p>
+                            <h2 class="mb-0 text-dark">28</h2>
+                        </div>
+                        <i class="fa fa-shopping-cart stats-icon"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6">
+                <div class="card stats-card h-100 p-3 bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <p class="text-muted mb-1">Toplam Ciro</p>
+                            <h2 class="mb-0 text-dark">₺12.500</h2>
+                        </div>
+                        <i class="fa fa-wallet stats-icon"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity (Table) -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h5 class="mb-0 text-dark">Son Rezervasyonlar</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Müşteri</th>
+                                <th>Tarih</th>
+                                <th>Kişi</th>
+                                <th>Durum</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reservationTableBody">
+                                <!-- JS Populated -->
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detail Modal -->
+    <div class="modal fade" id="detailModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Rezervasyon Detayı</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-2"><strong>Müşteri:</strong> <span id="modalName"></span></div>
+                    <div class="mb-2"><strong>Tarih:</strong> <span id="modalDate"></span></div>
+                    <div class="mb-2"><strong>Kişi Sayısı:</strong> <span id="modalPeople"></span></div>
+                    <hr>
+                    <div class="mb-2"><strong>Notlar:</strong> <p id="modalNotes" class="text-muted fst-italic mt-1"></p></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Kapat</button>
+                    <button type="button" class="btn btn-primary">Yazdır</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+    <script src="../js/reservation-data.js"></script> <!-- Import Shared Data -->
+    <script>
+        // Sidebar Toggle
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('active');
+            document.querySelector('.main-content').classList.toggle('active');
+        });
+
+        // Detay Modalı İşlemleri
+        var detailModal = new bootstrap.Modal(document.getElementById('detailModal'));
+
+        function renderReservations() {
+            const tbody = document.getElementById('reservationTableBody');
+            tbody.innerHTML = '';
+            
+            const reservations = ReservationManager.getAll();
+
+            reservations.forEach(res => {
+                let statusBadge = '';
+                if(res.status === 'pending') statusBadge = '<span class="badge bg-warning text-dark">Bekliyor</span>';
+                else if(res.status === 'approved') statusBadge = '<span class="badge bg-success">Onaylandı</span>';
+                else if(res.status === 'cancelled') statusBadge = '<span class="badge bg-danger">İptal</span>';
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${res.name}</td>
+                    <td>${res.date}</td>
+                    <td>${res.people}</td>
+                    <td>${statusBadge}</td>
+                    <td>
+                        <button class="btn btn-sm btn-info text-white" onclick="showDetail(${res.id})">Detay</button>
+                        ${res.status === 'pending' ? `
+                        <button class="btn btn-sm btn-success" onclick="updateStatus(${res.id}, 'approved')">Onayla</button>
+                        <button class="btn btn-sm btn-danger" onclick="updateStatus(${res.id}, 'cancelled')">İptal</button>
+                        ` : ''}
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateStatus(id, status) {
+            ReservationManager.updateStatus(id, status);
+            renderReservations();
+        }
+
+        function showDetail(id) {
+            const reservations = ReservationManager.getAll();
+            const res = reservations.find(r => r.id === id);
+            
+            if(res) {
+                document.getElementById('modalName').innerText = res.name;
+                document.getElementById('modalDate').innerText = res.date;
+                document.getElementById('modalPeople').innerText = res.people;
+                document.getElementById('modalNotes').innerText = res.message || '-';
+                detailModal.show();
+            }
+        }
+
+        // Initial Render
+        renderReservations();
+    </script>
+</body>
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('active');
+            document.querySelector('.main-content').classList.toggle('active');
+        });
+
+        // Detail Modal Function
+        var detailModal = new bootstrap.Modal(document.getElementById('detailModal'));
+
+        function showDetail(name, date, people, notes) {
+            document.getElementById('modalName').textContent = name;
+            document.getElementById('modalDate').textContent = date;
+            document.getElementById('modalPeople').textContent = people;
+            document.getElementById('modalNotes').textContent = notes;
+            
+            detailModal.show();
+        }
+    </script>
+</body>
+
+</html>

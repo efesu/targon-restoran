@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Targon Admin - Duyuru Yönetimi</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/admin.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3 class="text-primary"><i class="fa fa-utensils me-2"></i>Targon</h3>
+            <small class="text-white-50">Admin Paneli</small>
+        </div>
+        <div class="sidebar-menu">
+            <a href="index.html"><i class="fa fa-home"></i>Dashboard</a>
+            <a href="announcements.html" class="active"><i class="fa fa-bullhorn"></i>Duyurular</a>
+            <a href="menu.html"><i class="fa fa-book-open"></i>Menü Yönetimi</a>
+            <a href="../index.html" target="_blank"><i class="fa fa-globe"></i>Siteyi Görüntüle</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-white rounded shadow-sm mb-4 p-3">
+            <div class="container-fluid">
+                <button class="btn btn-primary d-block d-md-none" id="sidebarToggle"><i class="fa fa-bars"></i></button>
+                <h4 class="mb-0 text-dark ms-3">Duyuru Yönetimi</h4>
+                
+                <div class="ms-auto d-flex align-items-center">
+                    <div class="dropdown">
+                        <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="../img/ferhat-sef.jpeg" alt="" width="32" height="32" class="rounded-circle me-2">
+                            <strong>Admin</strong>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end text-small shadow" aria-labelledby="dropdownUser1">
+                            <li><a class="dropdown-item" href="#">Çıkış Yap</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Content -->
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                <h5 class="mb-0 text-dark">Duyuru Listesi</h5>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
+                    <i class="fa fa-plus me-2"></i>Yeni Duyuru Ekle
+                </button>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Görsel</th>
+                                <th>Başlık</th>
+                                <th>Durum</th>
+                                <th>Tarih</th>
+                                <th>İşlemler</th>
+                            </tr>
+                        </thead>
+                        <tbody id="announcementsTable">
+                            <!-- JS fills this -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal (Add/Edit) -->
+    <div class="modal fade" id="addModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Duyuru Ekle</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="announcementForm">
+                        <div class="mb-3">
+                            <label class="form-label">Başlık</label>
+                            <input type="text" class="form-control" id="annTitle" placeholder="Kampanya başlığı..." required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="annImage" class="form-label">Görsel Seç</label>
+                            <input type="file" class="form-control" id="annImage" accept="image/*">
+                        </div>
+                        <div class="mb-3">
+                            <label for="annDoc" class="form-label">Doküman Ekle (PDF/Word - İsteğe Bağlı)</label>
+                            <input type="file" class="form-control" id="annDoc" accept=".pdf,.doc,.docx">
+                            <div class="form-text">Duyuru detayında indirilebilir dosya olarak görünecektir.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">İçerik/Açıklama</label>
+                            <textarea class="form-control" id="annContent" rows="4"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tarih</label>
+                            <input type="date" class="form-control" id="annDate" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" class="btn btn-primary" onclick="addAnnouncement()">Kaydet</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/announcement-data.js"></script>
+    <script>
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('active');
+            document.querySelector('.main-content').classList.toggle('active');
+        });
+
+        function renderAnnouncements() {
+            const tbody = document.getElementById('announcementsTable');
+            tbody.innerHTML = '';
+            
+            // Use Manager
+            const items = AnnouncementManager.getAll();
+
+            items.forEach(item => {
+                // Fix path for admin panel (needs to go up one level)
+                let imagePath = item.image || '../img/event-placeholder.jpg';
+                if (imagePath.startsWith('img/')) {
+                    imagePath = '../' + imagePath;
+                }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><img src="${imagePath}" alt="" class="rounded" width="50" height="50" style="object-fit:cover;"></td>
+                    <td>${item.title}</td>
+                    <td><span class="badge bg-success">Yayında</span></td>
+                    <td>${item.date}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteAnnouncement(${item.id})"><i class="fa fa-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function addAnnouncement() {
+            const title = document.getElementById('annTitle').value;
+            const desc = document.getElementById('annContent').value;
+            const date = document.getElementById('annDate').value;
+            
+            if(title && date) {
+                let imagePath = "img/video.jpg"; // Default fallback
+                const fileInput = document.getElementById('annImage');
+                if (fileInput.files && fileInput.files[0]) {
+                    imagePath = "img/" + fileInput.files[0].name;
+                }
+
+                const docInput = document.getElementById('annDoc');
+                let docName = null;
+                if(docInput.files && docInput.files[0]) {
+                    docName = docInput.files[0].name;
+                }
+
+                const newItem = {
+                    id: Date.now(),
+                    title: title,
+                    description: desc,
+                    date: date,
+                    image: imagePath,
+                    document: docName
+                };
+
+                AnnouncementManager.add(newItem);
+                renderAnnouncements();
+
+                // Close Modal
+                var myModalEl = document.getElementById('addModal');
+                var modal = bootstrap.Modal.getInstance(myModalEl);
+                modal.hide();
+
+                // Reset Form
+                document.getElementById('announcementForm').reset();
+            } else {
+                alert("Lütfen başlık ve tarih giriniz.");
+            }
+        }
+
+        function deleteAnnouncement(id) {
+            if(confirm("Bu duyuruyu silmek istediğinize emin misiniz?")) {
+                AnnouncementManager.delete(id);
+                renderAnnouncements();
+            }
+        }
+
+        // Initial Render
+        renderAnnouncements();
+
+    </script>
+</body>
+
+</html>
